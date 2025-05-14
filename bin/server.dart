@@ -1,15 +1,18 @@
 import 'package:dart_frog/dart_frog.dart';
-import 'dart:io';
 
-void main() async {
-  final server = await serve(
-    // Dart Frog will automatically find the routes in lib/routes
-    (context) async {
-      return Response(statusCode: 200, body: 'Server is live');
-    },
-    InternetAddress.anyIPv4,
-    int.parse(Platform.environment['PORT'] ?? '8080'),
-  );
+Future<Response> onRequest(RequestContext context) async {
+  final uri = context.request.uri;
 
-  print('Server running on http://${server.address.host}:${server.port}');
+  // Manually handle the /auth/login route
+  if (uri.path == 'auth/login') {
+    return Response.json(body: {'message': 'Login route accessed!'});
+  }
+
+  // You can add more manual route checks like this:
+  if (uri.path == 'auth/signup') {
+    return Response.json(body: {'message': 'Sign Up route accessed!'});
+  }
+
+  // Handle other routes or fallback
+  return Response.json(body: {'message': 'Server is live'});
 }
