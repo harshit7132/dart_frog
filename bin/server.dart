@@ -1,12 +1,39 @@
+import 'package:dart_frog/dart_frog.dart';
 import 'dart:io';
-import 'package:shelf/shelf.dart';
-import 'package:shelf/shelf_io.dart' as io;
 
 void main() async {
-  final handler = const Pipeline().addHandler((req) => Response.ok('Hello from Dart API'));
+  final server = await serve(
+    (context) async {
+      final path = context.request.url.path;
 
-  final port = int.parse(Platform.environment['PORT'] ?? '8080');
-  final server = await io.serve(handler, InternetAddress.anyIPv4, port);
+      // Handle login route
+      if (path == 'auth/login' && context.request.method == 'POST') {
+        return await handleLogin(context);
+      }
 
-  print('Server running on port ${server.port}');
+      // Handle signUp route
+      if (path == 'auth/signUp' && context.request.method == 'POST') {
+        return await handleSignUp(context);
+      }
+
+      // If the route is not found
+      return Response(statusCode: 404, body: 'Route not found');
+    },
+    InternetAddress.anyIPv4,
+    int.parse(Platform.environment['PORT'] ?? '8080'),
+  );
+
+  print('Server running on http://${server.address.host}:${server.port}');
+}
+
+Future<Response> handleLogin(RequestContext context) async {
+  final body = await context.request.body();
+  // Handle login logic
+  return Response.json(body: {'message': 'Login successful'});
+}
+
+Future<Response> handleSignUp(RequestContext context) async {
+  final body = await context.request.body();
+  // Handle sign-up logic
+  return Response.json(body: {'message': 'Sign Up successful'});
 }

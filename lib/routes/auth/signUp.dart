@@ -2,6 +2,13 @@ import 'dart:convert';
 import 'package:dart_frog/dart_frog.dart';
 
 Future<Response> onRequest(RequestContext context) async {
+  if (context.request.method != HttpMethod.post) {
+    return Response.json(
+      statusCode: 405,
+      body: {'error': 'Method Not Allowed'},
+    );
+  }
+
   final body = await context.request.body();
   final data = jsonDecode(body);
 
@@ -16,14 +23,8 @@ Future<Response> onRequest(RequestContext context) async {
     );
   }
 
-  // Simulate logic (e.g., you can later add DB or file write logic here)
-  if (role.toLowerCase() == 'admin') {
-    // Simulate check that only one admin is allowed
-    return Response.json(
-      statusCode: 409,
-      body: {'error': 'One admin already exists (simulated)'},
-    );
-  }
-
-  return Response.json(body: {'message': 'User registered successfully (no DB)'});
+  // Simulate user creation (In a real-world case, insert into DB)
+  return Response.json(
+    body: {'message': 'User registered successfully'},
+  );
 }
