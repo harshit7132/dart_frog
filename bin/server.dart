@@ -1,6 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:dart_frog/dart_frog.dart';
+
 import '../routes/auth/login.dart' as login_route;
 import '../routes/auth/signUp.dart' as signup_route;
+import '../routes/index.dart' as index_route;
 
 Handler middleware(Handler handler) {
   return handler;
@@ -18,11 +22,15 @@ Handler handler = Pipeline()
   final request = context.request;
   final path = request.uri.path;
 
-  if (path == 'auth/login') {
+  if (path == '/') {
+    return index_route.onRequest(context);
+  }
+
+  if (path == '/auth/login') {
     return login_route.onRequest(context);
   }
 
-  if (path == 'auth/signup') {
+  if (path == '/auth/signup') {
     return signup_route.onRequest(context);
   }
 
