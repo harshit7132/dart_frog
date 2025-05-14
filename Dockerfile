@@ -1,10 +1,9 @@
 FROM dart:stable AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy the pubspec files
-COPY pubspec.yaml pubspec.lock ./
+# Only copy the pubspec.yaml if pubspec.lock is not available
+COPY pubspec.yaml ./
 
 # Get dependencies
 RUN dart pub get
@@ -16,7 +15,7 @@ COPY . .
 RUN dart pub global activate dart_frog_cli
 ENV PATH="$PATH:/root/.pub-cache/bin"
 
-# Build the Dart Frog server (this will automatically include the dependencies from your imports)
+# Build the Dart Frog server
 RUN dart_frog build
 
 # Expose the port the app will run on
