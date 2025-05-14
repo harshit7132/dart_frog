@@ -5,14 +5,17 @@ import 'package:dart_frog/dart_frog.dart';
 import 'dart:convert';
 import 'dart:async';
 
-void main() {
+void main() async {
   final port = int.parse(Platform.environment['PORT'] ?? '8080'); // Dynamically set the port for Render
 
   final handler = const Pipeline()
       .addMiddleware(logRequests())  // Custom logging middleware
       .addHandler(_router);
 
-  serve(handler, 'localhost', port);  // Start server on the specified port
+  
+  // Bind to 0.0.0.0 so the server is accessible from outside (Render requirement)
+  await serve(handler, InternetAddress.anyIPv4, port);
+  print('Server is running on port $port');
 }
 
 // Define routes
