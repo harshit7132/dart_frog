@@ -20,8 +20,28 @@ void main() async {
 
 // Define routes
 final _router = Router()
+  ..get('/', indexHandler)
   ..post('/auth/login', _loginHandler)
   ..post('/auth/signup', _signUpHandler);
+
+// Define your route handler
+Future<Response> indexHandler(RequestContext context) async {
+  try {
+    // Read the contents of login.dart (make sure the path is correct)
+    final file = File('routes\index.dart');
+    if (await file.exists()) {
+      final fileContent = await file.readAsString();
+      // Return the content of login.dart as the response
+      return Response.json(body: {'index': fileContent});
+    } else {
+      return Response.json(body: {'error': 'File not found'}, statusCode: 404);
+    }
+  } catch (e) {
+    // Handle error if file reading fails
+    return Response.json(body: {'error': 'Failed to read file: $e'}, statusCode: 500);
+  }
+}
+
 
 // Define your route handler
 Future<Response> _loginHandler(RequestContext context) async {
