@@ -2,10 +2,8 @@ FROM dart:stable AS build
 
 WORKDIR /app
 
-# Only copy the pubspec.yaml if pubspec.lock is not available
-COPY pubspec.yaml ./
-
-# Get dependencies
+# Copy pubspec first, then get dependencies
+COPY pubspec.yaml pubspec.lock ./
 RUN dart pub get
 
 # Copy the rest of the application files
@@ -18,8 +16,8 @@ ENV PATH="$PATH:/root/.pub-cache/bin"
 # Build the Dart Frog server
 RUN dart_frog build
 
-# Expose the port the app will run on
+# Expose the port
 EXPOSE 8080
 
-# Start the app
-CMD ["dart", "run", "bin/server.dart"]
+# Run the built server
+CMD ["dart", "run", "build"]

@@ -5,7 +5,7 @@ Future<Response> onRequest(RequestContext context) async {
   if (context.request.method != HttpMethod.post) {
     return Response.json(
       statusCode: 405,
-      body: {'error': 'Method Not Allowed'},
+      body: {'error': 'Method Not Allowed'}
     );
   }
 

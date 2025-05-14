@@ -1,6 +1,6 @@
 import 'package:dart_frog/dart_frog.dart';
 import '../routes/auth/login.dart' as login_route;
-import '../routes/auth/signup.dart' as signup_route;
+import '../routes/auth/signUp.dart' as signup_route;
 
 Handler middleware(Handler handler) {
   return handler;
