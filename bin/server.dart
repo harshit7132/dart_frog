@@ -17,7 +17,8 @@ void main() {
 
 // Define routes
 final _router = Router()
-  ..get('/auth/login', _loginHandler);
+  ..post('/auth/login', _loginHandler)
+  ..post('/auth/signup', _signUpHandler);
 
 // Define your route handler
 Future<Response> _loginHandler(RequestContext context) async {
