@@ -2,11 +2,11 @@ FROM dart:stable AS build
 
 WORKDIR /app
 
-# Copy pubspec first, then get dependencies
+# Copy only pubspec.yaml first and run `dart pub get` to generate pubspec.lock
 COPY pubspec.yaml ./
 RUN dart pub get
 
-# Copy the rest of the application files
+# Now copy the rest of the application files
 COPY . .
 
 # Activate Dart Frog globally
@@ -19,5 +19,5 @@ RUN dart_frog build
 # Expose the port
 EXPOSE 8080
 
-# Run the built server
-CMD ["dart", "run", "build"]
+# Run the server
+CMD ["dart", "run", "bin/server.dart"]
