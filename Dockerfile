@@ -1,28 +1,26 @@
-# Stage 1: Build
 FROM dart:stable AS build
 
+# Set working directory
 WORKDIR /app
 
-# Copy project files
+# Copy the pubspec files
+COPY pubspec.yaml pubspec.lock ./
+
+# Get dependencies
+RUN dart pub get
+
+# Copy the rest of the application files
 COPY . .
 
-# Activate Dart Frog CLI
+# Activate Dart Frog globally
 RUN dart pub global activate dart_frog_cli
 ENV PATH="$PATH:/root/.pub-cache/bin"
 
-# Install dependencies
-RUN dart pub get
-
-# Build Dart Frog app (this generates a build/ folder)
+# Build the Dart Frog server (this will automatically include the dependencies from your imports)
 RUN dart_frog build
 
-# Stage 2: Run
-FROM dart:stable
+# Expose the port the app will run on
+EXPOSE 8080
 
-WORKDIR /app
-
-# Copy the built server from the build stage
-COPY --from=build /app/build /app
-
-# Set the startup command
+# Start the app
 CMD ["dart", "run", "bin/server.dart"]
