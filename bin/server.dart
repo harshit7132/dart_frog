@@ -17,7 +17,7 @@ void main() async {
       }
 
       // If the route is not found
-      return Response(statusCode: 404, body: 'Route not found');
+      return Response(statusCode: 200, body: 'dart api live ');
     },
     InternetAddress.anyIPv4,
     int.parse(Platform.environment['PORT'] ?? '8080'),
