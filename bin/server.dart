@@ -28,7 +28,7 @@ final _router = Router()
 Future<Response> indexHandler(RequestContext context) async {
   try {
     // Read the contents of login.dart (make sure the path is correct)
-    final file = File('routes\index.dart');
+    final file = File('my_api\routes\index.dart');
     if (await file.exists()) {
       final fileContent = await file.readAsString();
       // Return the content of login.dart as the response
@@ -47,7 +47,7 @@ Future<Response> indexHandler(RequestContext context) async {
 Future<Response> _loginHandler(RequestContext context) async {
   try {
     // Read the contents of login.dart (make sure the path is correct)
-    final file = File('routes\auth\login.dart');
+    final file = File('my_api\routes\auth\login.dart');
     if (await file.exists()) {
       final fileContent = await file.readAsString();
       // Return the content of login.dart as the response
@@ -69,7 +69,7 @@ final _router1 = Router()
 Future<Response> _signUpHandler(RequestContext context) async {
   try {
     // Read the contents of login.dart (make sure the path is correct)
-    final file = File('routes\auth\signUp.dart');
+    final file = File('my_api\routes\auth\signUp.dart');
     if (await file.exists()) {
       final fileContent = await file.readAsString();
       // Return the content of login.dart as the response
