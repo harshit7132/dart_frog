@@ -1,99 +1,28 @@
-// ignore_for_file: avoid_slow_async_io
-
-import 'dart:io';
 import 'package:dart_frog/dart_frog.dart';
-import 'dart:convert';
-import 'dart:async';
+import '../routes/auth/login.dart' as login_route;
+import '../routes/auth/signup.dart' as signup_route;
 
-void main() async {
-  final port = int.parse(Platform.environment['PORT'] ?? '8080'); // Dynamically set the port for Render
-
-  final handler = const Pipeline()
-      .addMiddleware(logRequests())  // Custom logging middleware
-      .addHandler(_router);
-
-  
-  // Bind to 0.0.0.0 so the server is accessible from outside (Render requirement)
-  await serve(handler, InternetAddress.anyIPv4, port);
-  print('Server is running on port $port');
+Handler middleware(Handler handler) {
+  return handler;
 }
 
-// Define routes
-final _router = Router()
-  ..get('/', indexHandler)
-  ..post('/auth/login', _loginHandler)
-  ..post('/auth/signup', _signUpHandler);
+Handler handler = Pipeline()
+    .addMiddleware(middleware)
+    .addHandler((context) async {
+  final request = context.request;
+  final path = request.uri.path;
 
-// Define your route handler
-Future<Response> indexHandler(RequestContext context) async {
-  try {
-    // Read the contents of login.dart (make sure the path is correct)
-    final file = File('my_api\routes\index.dart');
-    if (await file.exists()) {
-      final fileContent = await file.readAsString();
-      // Return the content of login.dart as the response
-      return Response.json(body: {'index': fileContent});
-    } else {
-      return Response.json(body: {'error': 'File not found'}, statusCode: 404);
-    }
-  } catch (e) {
-    // Handle error if file reading fails
-    return Response.json(body: {'error': 'Failed to read file: $e'}, statusCode: 500);
+  if (path == 'auth/login') {
+    return login_route.onRequest(context);
   }
-}
 
-
-// Define your route handler
-Future<Response> _loginHandler(RequestContext context) async {
-  try {
-    // Read the contents of login.dart (make sure the path is correct)
-    final file = File('my_api\routes\auth\login.dart');
-    if (await file.exists()) {
-      final fileContent = await file.readAsString();
-      // Return the content of login.dart as the response
-      return Response.json(body: {'loginContent': fileContent});
-    } else {
-      return Response.json(body: {'error': 'File not found'}, statusCode: 404);
-    }
-  } catch (e) {
-    // Handle error if file reading fails
-    return Response.json(body: {'error': 'Failed to read file: $e'}, statusCode: 500);
+  if (path == 'auth/signup') {
+    return signup_route.onRequest(context);
   }
-}
 
-// Define routes
-final _router1 = Router()
-  ..get('/auth/signup', _signUpHandler);
-
-// Define your sign up route handler
-Future<Response> _signUpHandler(RequestContext context) async {
-  try {
-    // Read the contents of login.dart (make sure the path is correct)
-    final file = File('my_api\routes\auth\signUp.dart');
-    if (await file.exists()) {
-      final fileContent = await file.readAsString();
-      // Return the content of login.dart as the response
-      return Response.json(body: {'signUpcontant': fileContent});
-    } else {
-      return Response.json(body: {'error': 'signUp File not found'}, statusCode: 404);
-    }
-  } catch (e) {
-    // Handle error if file reading fails
-    return Response.json(body: {'error': 'Failed to read file: $e'}, statusCode: 500);
-  }
-}
-
-// Custom logging middleware
-Middleware logRequests() {
-  return (handler) {
-    return (context) async {
-      final request = context.request;
-      print('Request: ${request.method} ${request.uri}');
-
-      final response = await handler(context);
-
-      print('Response: ${response.statusCode}');
-      return response;
-    };
-  };
-}
+  // fallback
+  return Response.json(
+    statusCode: 404,
+    body: {'error': 'Route not found'},
+  );
+});
