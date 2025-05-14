@@ -1,16 +1,28 @@
-# Use the official Dart image
-FROM dart:stable
+# Stage 1: Build
+FROM dart:stable AS build
 
-# Resolve app dependencies.
 WORKDIR /app
-COPY pubspec.* ./
-RUN dart pub get
 
-# Copy rest of the source code
+# Copy project files
 COPY . .
 
-# Build the Dart Frog server
+# Activate Dart Frog CLI
+RUN dart pub global activate dart_frog_cli
+ENV PATH="$PATH:/root/.pub-cache/bin"
+
+# Install dependencies
+RUN dart pub get
+
+# Build Dart Frog app (this generates a build/ folder)
 RUN dart_frog build
 
-# Start the server
-CMD ["dart", "build/bin/server.dart"]
+# Stage 2: Run
+FROM dart:stable
+
+WORKDIR /app
+
+# Copy the built server from the build stage
+COPY --from=build /app/build /app
+
+# Set the startup command
+CMD ["dart", "run", "bin/server.dart"]
