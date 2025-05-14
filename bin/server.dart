@@ -6,6 +6,12 @@ Handler middleware(Handler handler) {
   return handler;
 }
 
+// Main function to start the Dart Frog server
+void main() {
+  // Start the Dart Frog server with the handler that defines routes
+  serve(handler, '0.0.0.0', 8080);
+}
+
 Handler handler = Pipeline()
     .addMiddleware(middleware)
     .addHandler((context) async {
