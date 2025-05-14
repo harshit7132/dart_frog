@@ -3,7 +3,7 @@ FROM dart:stable AS build
 WORKDIR /app
 
 # Copy pubspec first, then get dependencies
-COPY pubspec.yaml pubspec.lock ./
+COPY pubspec.yaml ./
 RUN dart pub get
 
 # Copy the rest of the application files
