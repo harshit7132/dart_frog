@@ -12,6 +12,7 @@ dependencies:
   crypto: ^3.0.3
   postgres: ^2.5.4
   logging: ^1.0.2 # Add this line
+  bcrypt: any
 
 dev_dependencies:
   dart_frog_cli: ^1.0.0

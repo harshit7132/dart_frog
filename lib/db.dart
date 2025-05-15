@@ -1,31 +1,19 @@
+import 'dart:io';
 import 'package:postgres/postgres.dart';
-import 'dart:async';
 
-class DbHelper {
-  final _connection = PostgreSQLConnection(
-    'localhost', // host
-    5432, // port
-    'dartfrogdb', // database name
-    username: 'dartfroguser', // username
-    password: 'password123', // password
+class Database {
+  static final _connection = PostgreSQLConnection(
+    Platform.environment['DB_HOST'] ?? 'localhost',
+    int.parse(Platform.environment['DB_PORT'] ?? '5432'),
+    Platform.environment['DB_NAME'] ?? 'your_db_name',
+    username: Platform.environment['DB_USER'] ?? 'your_username',
+    password: Platform.environment['DB_PASSWORD'] ?? 'your_password',
   );
 
-  // Establish connection
-  Future<void> connect() async {
-    await _connection.open();
-  }
-
-  // Check if user exists by email
-  Future<bool> checkUserExists(String email) async {
-    final result = await _connection.query(
-      'SELECT email FROM users WHERE email = @email',
-      substitutionValues: {'email': email},
-    );
-    return result.isNotEmpty;
-  }
-
-  // Close connection
-  Future<void> close() async {
-    await _connection.close();
+  static Future<PostgreSQLConnection> getConnection() async {
+    if (_connection.isClosed) {
+      await _connection.open();
+    }
+    return _connection;
   }
 }
