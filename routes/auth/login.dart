@@ -81,17 +81,19 @@
 //       body: {'error': 'Database error', 'details': e.toString()},
 //     );
 //   }
-// }
+// } 
+//
 
-
+// ignore_for_file: unused_import
+                                                
 import 'dart:convert';
+
 import 'package:dart_frog/dart_frog.dart';
-import 'package:my_api/db.dart';
-import 'package:postgres/postgres.dart'; 
-
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:my_api/db.dart';
+import 'package:postgres/postgres.dart';
 
-Future<Response> onRequest(RequestContext context) async {
+ Future<Response> onRequest(RequestContext context) async {
   if (context.request.method != HttpMethod.post) {
     return Response.json(statusCode: 405, body: {'error': 'Method Not Allowed'});
   }
@@ -131,14 +133,19 @@ Future<Response> onRequest(RequestContext context) async {
   // Generate JWT token
   final jwt = JWT(
     {
-      'id': row[0],
+      'id': row[0],      
       'email': row[1],
       'role': row[3],
     },
     issuer: 'your.app',
   );
+                    
 
-  final token = jwt.sign(SecretKey('your-very-secret-key'), expiresIn: Duration(hours: 24));
+  print('i need jwt token here to login the users uniquely and to shoq them unique datas and to store data uniquly in my database which is in render.com psql :');
+
+  final token = jwt.sign(SecretKey('my-secret-key'), expiresIn: Duration(hours: 24));
+ 
+
 
   return Response.json(
     body: {

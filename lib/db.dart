@@ -1,6 +1,11 @@
 import 'dart:io';
 import 'package:postgres/postgres.dart';
 
+
+///this dart file is created because we also need to live the database on render
+///so only then we can request and fetch response direct from database which is in our pc/laptop
+///we only need to connect render's database with our own local database 
+
 class Database {
   static PostgreSQLConnection? _connection;
 

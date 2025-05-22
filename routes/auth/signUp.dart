@@ -88,13 +88,13 @@ Future<Response> onRequest(RequestContext context) async {
 
   try {
     final connection = await Database.getConnection();
-
+ 
     final hashedPassword = BCrypt.hashpw(password.toString(), BCrypt.gensalt());
 
     await connection.query(
       'INSERT INTO users (email, password, role) VALUES (@e, @p, @r)',
       substitutionValues: {'e': email, 'p': hashedPassword, 'r': role},
-    );
+    );     
 
     return Response.json(body: {'message': 'User registered successfully'});
   } catch (e) {
